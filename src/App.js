@@ -1,35 +1,68 @@
-import React, { useState, useEffect } from "react";
-import Form from "./Components/Form";
+import './App.css'
+import React, { useState } from 'react';
+import Form from './Components/Form';
+import schema from './validation/formSchema.js';
+import * as yup from 'yup';
+import axios from 'axios';
 
-const initialFormVals = {
-  name: "",
-  email: "",
-  password: "",
-  tos: false,
+const initialFormValues = {
+  username: '',
+  password: '',
+  email: '',
+  tos: false
+}
+
+const initialFormErrors = {
+  username: '',
+  password: '',
+  email: '',
+  tos: ''
 }
 
 
 function App() {
-  const [values, setValues] = useState(initialFormVals)
+  const [formValues, setFormValues] = useState(initialFormValues);
+  const [formErrors, setFormErrors] = useState(initialFormErrors);
+  const [users, setUsers] = useState([]);
+
+  const validate  = (name, value) => {
+    yup.reach(schema, name)
+      .validate(value)
+      .then(() => setFormErrors({ ...formErrors, [name]: "" }))
+      .catch(err => setFormErrors({ ...formErrors, [name]: err.errors[0] }))
+  }
 
   const onChange = (name, value) => {
-    setValues({ ...values, [name]: value })
+    validate(name, value);
+    setFormValues({ ...formValues, [name]: value })
   }
 
-  const onSub = () => {
-    setValues(initialFormVals)
+  const onSubmit = () => {
+    axios.post('https://reqres.in/api/users', formValues)
+      .then(res => {
+        setUsers([ res.data, ...users ])
+      })
+      .catch(err => console.error(err))
   }
 
-  return (
-    <div className="App">
-      <h1>Form</h1>
+  return(
+    <div className='App'>
       <Form 
-        values={values}
+        values={formValues}
         change={onChange}
-        submit={onSub}
+        errors={formErrors}
+        submit={onSubmit}
       />
+      {users.map( (user, index) => {
+        return(
+        <div key={index}>
+          <p>{user.createdAt}</p>
+          <p>{user.email}</p>
+        </div>
+        )
+      })}
     </div>
-  );
+  )
 }
 
 export default App;

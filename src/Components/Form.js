@@ -1,56 +1,65 @@
-import React from "react";
+import React from 'react'
 
 
 const Form = (props) => {
 
+    const { change, submit, errors } = props;
+    const { username, email, password, tos } = props.values;
 
-    const handleChange = evt => {
-        const { name, value } = evt.target;
-
-        props.change(name, value)
+    const onChange = (evt) => {
+        const { name, value, checked, type } = evt.target;
+        const newVal = type === "checkbox" ? checked : value;
+        change(name, newVal)
     }
 
-    const handleSubmit = evt => {
+    const onSubmit = (evt) => {
         evt.preventDefault();
-        props.submit()
+        submit()
     }
 
-    return(
-        <form onSubmit={handleSubmit}>
-            <label>Name:
-                <input 
-                    type="text"
-                    value={props.values.name}
-                    name="name"
-                    onChange={handleChange}
-                />
-            </label>
-            <label>Email:
-                <input 
-                    type="email"
-                    value={props.values.email}
-                    name="email"
-                    onChange={handleChange}
-                />
-            </label>
-            <label>Password:
-                <input 
-                    type="password"
-                    values={props.values.password}
-                    name="password"
-                    onChange={handleChange}
-                />
-            </label>
-            <label>TOS
-                <input 
-                    type="checkbox"
-                    value={props.values.tos}
-                    name="tos"
-                    onChange={handleChange}
-                />
-            </label>
-            <input type="submit" value="create team"/>
-        </form>
+    return (
+        <div>
+            <h1>Form</h1>
+            <p>{errors.username}</p>
+            <p>{errors.password}</p>
+            <p>{errors.email}</p>
+            <p>{errors.tos}</p>
+            <form onSubmit={onSubmit}>
+                <label>Name:
+                    <input
+                        type="text"
+                        name="username"
+                        value={username}
+                        onChange={onChange}
+                    />
+                </label>
+                <label>Email:
+                    <input
+                        type="email"
+                        name="email"
+                        value={email}
+                        onChange={onChange}
+                    />
+                </label>
+                <label>Password
+                    <input
+                        type="password"
+                        name="password"
+                        value={password}
+                        onChange={onChange}
+                    />
+                </label>
+                <label>Terms of Service:
+                    <input
+                        type="checkbox"
+                        name="tos"
+                        checked={tos}
+                        onChange={onChange}
+                    />
+                </label>
+                <input type="submit" value="create" />
+            </form>
+        </div>
     )
 }
 

@@ -14,12 +14,12 @@ const Form = (props) => {
 
     const onSubmit = (evt) => {
         evt.preventDefault();
-        submit()
+        submit();
     }
 
     return (
         <div>
-            <h1>Form</h1>
+            <h1>Learn React</h1>
             <p>{errors.username}</p>
             <p>{errors.password}</p>
             <p>{errors.email}</p>

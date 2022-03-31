@@ -5,7 +5,7 @@ import schema from './validation/formSchema.js';
 import * as yup from 'yup';
 import axios from 'axios';
 
-const initialFormValues = {
+let initialFormValues = {
   username: '',
   password: '',
   email: '',
@@ -30,7 +30,7 @@ function App() {
       .validate(value)
       .then(() => setFormErrors({ ...formErrors, [name]: "" }))
       .catch(err => setFormErrors({ ...formErrors, [name]: err.errors[0] }))
-      .finally(() => setFormValues(initialFormValues))
+
   }
 
   const onChange = (name, value) => {
@@ -44,6 +44,7 @@ function App() {
         setUsers([ res.data, ...users ])
       })
       .catch(err => console.error(err))
+      .finally(() => setFormValues(initialFormValues))
   }
 
   return(
